@@ -4,6 +4,7 @@
 ```
 sudo podman build . --tag localhost/wireguard
 sudo podman run --name wireguard \
+		--rm \
 		--detach \
 		--net host \
 		--privileged \
