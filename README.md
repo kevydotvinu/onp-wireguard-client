@@ -1,4 +1,4 @@
-# OpenShift Network Playground - Wireguard
+# OpenShift Network Playground - Wireguard client
 
 ## Run container
 ```
