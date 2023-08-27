@@ -8,6 +8,7 @@ WORKDIR /workdir
 ADD run.sh .
 
 RUN  apk -U upgrade && \
-     apk add --no-cache wireguard-tools
+     apk add --no-cache wireguard-tools && \
+     chmod +x /workdir/run.sh
 
 ENTRYPOINT ["/workdir/run.sh"]
