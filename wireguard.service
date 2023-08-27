@@ -1,0 +1,25 @@
+# /etc/systemd/system/wireguard.service
+[Unit]
+Description=Wireguard for openshift-network-playground
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=always
+TimeoutStartSec=180
+TimeoutStopSec=70
+ExecStartPre=-/usr/bin/rm -f %t/%n.ctr-id
+ExecStartPre=/usr/bin/podman build --net host --tag localhost/wireguard /opt/openshift-network-playground/wireguard
+ExecStart=/usr/bin/podman run --cidfile=%t/%n.ctr-id --cgroups=no-conmon --rm --sdnotify=conmon --name wireguard --detach --net host --cap-add NET_ADMIN,NET_RAW --volume /etc/wireguard/wg0.conf:/etc/wireguard/wg0.conf localhost/wireguard
+ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
+ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=default.target
+
+[Service]
+TimeoutStopFailureMode=abort
