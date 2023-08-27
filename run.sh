@@ -13,6 +13,7 @@ set_dns() {
 }
 
 trap graceful_exit err exit
+wg-quick down wg0
 wg-quick up wg0
 set_dns
 ping -c 3 ${SERVER_IP}
